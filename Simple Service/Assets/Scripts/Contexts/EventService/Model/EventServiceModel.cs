@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Common;
-using UnityEngine;
 
 namespace Contexts.EventService.Model
 {
@@ -19,25 +18,20 @@ namespace Contexts.EventService.Model
             _data.GameEvents.Add(gameEvent); 
         }
 
-        public void ClearData()
-        {
-            _data.GameEvents.Clear();
-        }
-
-        public string ConvertDataToJson()
-        {
-            return JsonUtility.ToJson(_data);
-        }
-
-        public object GetDataCopy()
+        public EventServiceModelData GetDataCopy()
         {
             var copy = new EventServiceModelData {GameEvents = new List<GameEvent>()};
             foreach (var gameEvent in _data.GameEvents)
             {
-                copy.GameEvents.Add(new GameEvent(gameEvent.Type, gameEvent.Data));
+                copy.GameEvents.Add(gameEvent);
             }
 
             return copy;
+        }
+
+        public void RemoveGameEventFromData(GameEvent gameEvent)
+        {
+            _data.GameEvents.Remove(gameEvent);
         }
     }
 

@@ -18,7 +18,10 @@ namespace Contexts.EventService.Command
                 Debug.Log("Data is empty");
                 Fail();
             }
-            injectionBinder.GetInstance<EventServiceModel>().InitializeData(localData);
+            else
+            {
+                injectionBinder.GetInstance<EventServiceModel>().InitializeData(localData);
+            }
         }
     }
 }

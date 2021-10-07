@@ -8,13 +8,22 @@ namespace Contexts.EventService.Command
     public class SendEventServiceDataCommand : strange.extensions.command.impl.Command
     {
         private UnityWebRequest _request;
-        EventServiceModel _eventServiceModel;
+        private EventServiceModel _eventServiceModel;
+        private EventServiceModelData _copy;
+
         public override void Execute()
         {
             Retain();
             Debug.Log("Sending data...");
             _eventServiceModel = injectionBinder.GetInstance<EventServiceModel>();
-            var jsonString = _eventServiceModel.ConvertDataToJson();
+            _copy = _eventServiceModel.GetDataCopy();
+            if (_copy.GameEvents.Count == 0)
+            {
+                Debug.Log("Data is empty");
+                Release();
+                return;
+            }
+            var jsonString = JsonUtility.ToJson(_copy);
             var url = ResourcePaths.ANALYTICS_SERVER_URL;
             _request = UnityWebRequest.Put(url, jsonString);
             _request.method = UnityWebRequest.kHttpVerbPOST;
@@ -29,7 +38,10 @@ namespace Contexts.EventService.Command
             if (!_request.isNetworkError && _request.responseCode == (long)ResponseCodes.OK)
             {
                 Debug.Log("Data sent successfully");
-                _eventServiceModel.ClearData();
+                foreach (var gameEvent in _copy.GameEvents)
+                {
+                    _eventServiceModel.RemoveGameEventFromData(gameEvent);   
+                }
             }
             _request.Dispose();
             Release();
