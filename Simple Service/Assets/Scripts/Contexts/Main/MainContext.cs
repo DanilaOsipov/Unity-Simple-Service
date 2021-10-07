@@ -31,7 +31,7 @@ namespace Contexts.Main
                 .InSequence()
                 .Once();
             
-            injectionBinder.Bind<GameEventTriggeredSignal>().ToSingleton().CrossContext();
+            injectionBinder.Bind<GameQuitSignal>().ToSingleton().CrossContext();
 
             mediationBinder.BindView<MainView>().ToMediator<MainMediator>();
         }
@@ -46,7 +46,7 @@ namespace Contexts.Main
         public override void OnRemove()
         {
             base.OnRemove();
-            injectionBinder.CrossContextBinder.Unbind<GameEventTriggeredSignal>();
+            injectionBinder.CrossContextBinder.Unbind<GameQuitSignal>();
         }
     }
 }

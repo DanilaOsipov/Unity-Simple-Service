@@ -6,7 +6,7 @@ namespace Contexts.Main.View
     public class MainMediator : Mediator
     {
         [Inject] public MainView View { get; set; }
-        [Inject] public GameEventTriggeredSignal GameEventTriggeredSignal { get; set; }
+        [Inject] public GameQuitSignal GameQuitSignal { get; set; }
         
         public override void OnRegister()
         {
@@ -20,7 +20,7 @@ namespace Contexts.Main.View
 
         private void OnGameQuitHandler()
         {
-            GameEventTriggeredSignal.Dispatch(new GameEvent(GameEvent.GAME_QUIT, null));
+            GameQuitSignal.Dispatch();
         }
     }
 }
